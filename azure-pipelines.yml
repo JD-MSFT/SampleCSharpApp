@@ -29,7 +29,7 @@ stages:
       displayName: Test    
       inputs:
         command: test
-        projects: '/UnitTests/SampleTestProject/SampleTestProject.csproj'
+        projects: '$(System.DefaultWorkingDirectory)/UnitTests/SampleTestProject/SampleTestProject.csproj'
         arguments: '--configuration $(buildConfiguration)'
     - task: DotNetCoreCLI@2
       displayName: Prepare Publish    
