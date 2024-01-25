@@ -62,4 +62,4 @@ stages:
         azureSubscription: 'McGoughAzDO'
         appType: 'webAppLinux'
         WebAppName: 'samplecsharp'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
