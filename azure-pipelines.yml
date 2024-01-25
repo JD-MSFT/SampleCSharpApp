@@ -1,0 +1,68 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- main
+
+stages:
+- stage: Build
+
+  jobs:
+  - job: Build
+
+    pool:
+      vmImage: ubuntu-latest
+
+    variables:
+      buildConfiguration: 'Release'
+
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: build
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfiguration)' 
+    - task: DotNetCoreCLI@2
+      displayName: Test    
+      inputs:
+        command: test
+        projects: '**/*Tests/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+    - task: DotNetCoreCLI@2
+      displayName: Prepare Publish    
+      inputs:
+        command: publish
+        publishWebProjects: True
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: True
+    - task: PublishPipelineArtifact@1
+      displayName: Publish    
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'drop'
+
+
+- stage: Deploy
+
+  jobs:
+  - job: Deploy
+
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'drop'
+        targetPath: '$(Pipeline.Workspace)'
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'McGoughAzDO'
+        appType: 'webAppLinux'
+        WebAppName: 'samplecsharp'
+        packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
