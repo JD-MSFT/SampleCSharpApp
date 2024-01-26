@@ -62,7 +62,7 @@ stages:
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
-        azureSubscription: 'McGoughAzDO'
+        azureSubscription: 'azconnection'
         appType: 'webAppLinux'
         WebAppName: 'samplecsharp'
         packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
