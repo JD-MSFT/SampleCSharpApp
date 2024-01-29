@@ -62,7 +62,7 @@ stages:
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
-        azureSubscription: 'azconnection'
+        azureSubscription: 'devops-accelerator-connection'
         appType: 'webAppLinux'
         WebAppName: 'devopsacceleratorsamplecsharp'
         packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
