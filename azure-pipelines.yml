@@ -64,5 +64,5 @@ stages:
         ConnectionType: 'AzureRM'
         azureSubscription: 'azconnection'
         appType: 'webAppLinux'
-        WebAppName: 'samplecsharp'
+        WebAppName: 'devopsacceleratorsamplecsharp'
         packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
