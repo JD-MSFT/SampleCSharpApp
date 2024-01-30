@@ -69,4 +69,4 @@ stages:
                 azureSubscription: 'devops-accelerator-connection'
                 appType: 'webAppLinux'
                 WebAppName: 'devopsacceleratorsamplecsharp'
-                packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
+                packageForLinux: '$(Pipeline.Workspace)/**/src.zip'
