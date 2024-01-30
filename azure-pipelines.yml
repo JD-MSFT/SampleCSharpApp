@@ -48,21 +48,25 @@ stages:
 - stage: Deploy
 
   jobs:
-  - job: Deploy
+  - deployment: deploy
+    environment: 'mydevelopment'
 
     pool:
       vmImage: ubuntu-latest
 
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: 'current'
-        artifactName: 'drop'
-        targetPath: '$(Pipeline.Workspace)'
-    - task: AzureRmWebAppDeployment@4
-      inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: 'devops-accelerator-connection'
-        appType: 'webAppLinux'
-        WebAppName: 'devopsacceleratorsamplecsharp'
-        packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
+    strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                buildType: 'current'
+                artifactName: 'drop'
+                targetPath: '$(Pipeline.Workspace)'
+            - task: AzureRmWebAppDeployment@4
+              inputs:
+                ConnectionType: 'AzureRM'
+                azureSubscription: 'devops-accelerator-connection'
+                appType: 'webAppLinux'
+                WebAppName: 'devopsacceleratorsamplecsharp'
+                packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
