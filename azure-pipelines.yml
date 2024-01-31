@@ -74,9 +74,9 @@ stages:
           deploy:
             steps:
             - script: |
-              $a = 5
-              $b = 10
-              echo "The sum of $a and $b is $a + $b"
+                $a = 5
+                $b = 10
+                echo "The sum of $a and $b is $a + $b"
             - script:
                 echo $(AppName)
                 echo $(serviceConnection)
