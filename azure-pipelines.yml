@@ -86,8 +86,8 @@ stages:
           deploy:
             steps:
             - script:
-                echo $(variables.AppName)
-                echo $(variables.deployment-env)
+                echo ${{ variables.AppName }}
+                echo ${{ variables.deployment-env }}
             - task: DownloadPipelineArtifact@2
               inputs:
                 buildType: 'current'
