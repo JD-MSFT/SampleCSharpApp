@@ -66,12 +66,12 @@ stages:
   - deployment: deploy
     condition: and(succeeded(), eq(variables.isMain, true))
     variables:
-      ${{ if eq(variables.isMain, true) }}:
+      - ${{ if eq(variables.isMain, true) }}:
         - group: Csharp-Prod
         - group: deployment-envs
         - name: deployment-envs
           value: $[variables.production]
-      ${{ if eq(variables.isDev, true) }}:
+      - ${{ if eq(variables.isDev, true) }}:
         - group: Csharp-Prod
         - group: deployment-envs
         - name: deployment-env
