@@ -92,29 +92,29 @@ stages:
                 packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
 
   - deployment: dev deploy
-      condition: and(succeeded(), eq(variables.isDev, true))
-      variables:
-          - group: CSharp-Dev
-      environment: myproduction
+    condition: and(succeeded(), eq(variables.isDev, true))
+    variables:
+        - group: CSharp-Dev
+    environment: myproduction
 
-      pool:
-        vmImage: $(vmImageName)
+    pool:
+      vmImage: $(vmImageName)
 
-      strategy:
-          runOnce:
-            deploy:
-              steps:
-              - script:
-                  echo $(variables.AppName)
-              - task: DownloadPipelineArtifact@2
-                inputs:
-                  buildType: 'current'
-                  artifactName: 'drop'
-                  targetPath: '$(Pipeline.Workspace)'
-              - task: AzureRmWebAppDeployment@4
-                inputs:
-                  ConnectionType: 'AzureRM'
-                  azureSubscription: 'devops-accelerator-connection'
-                  appType: 'webAppLinux'
-                  WebAppName: 'devopsacceleratorsamplecsharp'
-                  packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
+    strategy:
+        runOnce:
+          deploy:
+            steps:
+            - script:
+                echo $(variables.AppName)
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                buildType: 'current'
+                artifactName: 'drop'
+                targetPath: '$(Pipeline.Workspace)'
+            - task: AzureRmWebAppDeployment@4
+              inputs:
+                ConnectionType: 'AzureRM'
+                azureSubscription: 'devops-accelerator-connection'
+                appType: 'webAppLinux'
+                WebAppName: 'devopsacceleratorsamplecsharp'
+                packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
