@@ -66,17 +66,16 @@ stages:
   - deployment: deploy
     condition: and(succeeded(), eq(variables.isMain, true))
     variables:
-      # - ${{ if eq(variables.isMain, true) }}:
-      - group: CSharp-Dev
-      - group: deployment-envs
-        # - group: deployment-envs
-        # - name: deployment-env
-        #   value: $[variables.production]
-      # - ${{ if eq(variables.isDev, true) }}:
-      #   - group: CSharp-Dev
-      #   - group: deployment-envs
-      #   - name: deployment-env
-      #     value: $[variables.development]
+      - ${{ if eq(variables.isMain, true) }}:
+        - group: CSharp-Dev
+        - group: deployment-envs
+        - name: deployment-env
+          value: $[variables.production]
+      - ${{ if eq(variables.isDev, true) }}:
+        - group: CSharp-Dev
+        - group: deployment-envs
+        - name: deployment-env
+          value: $[variables.development]
     environment: myproduction
 
     pool:
@@ -88,6 +87,7 @@ stages:
             steps:
             - script:
                 echo $(AppName)
+                echo $(deployment-env)
             - task: DownloadPipelineArtifact@2
               inputs:
                 buildType: 'current'
