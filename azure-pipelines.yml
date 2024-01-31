@@ -112,7 +112,7 @@ stages:
                 buildType: 'current'
                 artifactName: 'drop'
                 targetPath: '$(Pipeline.Workspace)'
-            - task: AzureRmWebAppDeployment@4\\
+            - task: AzureRmWebAppDeployment@4
               inputs:
                 ConnectionType: 'AzureRM'
                 azureSubscription: $(serviceConnection)
