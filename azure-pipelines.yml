@@ -11,7 +11,7 @@ trigger:
 variables:
   vmImageName: 'ubuntu-latest'
 
-  serviceConnection: $(serviceConnection)
+  serviceConnection: ${{serviceConnection}}
 
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
 
