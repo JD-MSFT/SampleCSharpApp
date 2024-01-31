@@ -11,6 +11,8 @@ trigger:
 variables:
   vmImageName: 'ubuntu-latest'
 
+  serviceConnection: $(serviceConnection)
+
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
 
   isDev: $[eq(variables['Build.SourceBranch'], 'refs/heads/development')]
@@ -78,7 +80,7 @@ stages:
             steps:
             - script:
                 echo $(AppName)
-                echo ${{ variables.serviceConnection }}
+                echo $(serviceConnection)
             - task: DownloadPipelineArtifact@2
               inputs:
                 buildType: 'current'
@@ -87,7 +89,7 @@ stages:
             - task: AzureRmWebAppDeployment@4
               inputs:
                 ConnectionType: 'AzureRM'
-                azureSubscription: ${{ variables.serviceConnection }}
+                azureSubscription: $(serviceConnection)
                 appType: 'webAppLinux'
                 WebAppName: $(AppName)
                 packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
@@ -115,7 +117,7 @@ stages:
             - task: AzureRmWebAppDeployment@4
               inputs:
                 ConnectionType: 'AzureRM'
-                azureSubscription: ${{ variables.serviceConnection }}
+                azureSubscription: $(serviceConnection)
                 appType: 'webAppLinux'
                 WebAppName: $(AppName)
                 packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
