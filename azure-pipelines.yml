@@ -69,14 +69,11 @@ stages:
       - ${{ if eq(variables.isMain, true) }}:
         - group: CSharp-Dev
         - group: deployment-envs
-        - name: deployment-env
-          value: $[variables.production]
+        environment: $(production)
       - ${{ if eq(variables.isDev, true) }}:
         - group: CSharp-Dev
         - group: deployment-envs
-        - name: deployment-env
-          value: $[variables.development]
-    environment: myproduction
+        environment: $(development)
 
     pool:
       vmImage: $(vmImageName)
@@ -86,8 +83,8 @@ stages:
           deploy:
             steps:
             - script:
-                echo ${{ variables.AppName }}
-                echo ${{ variables.deployment-env }}
+                echo $(variables.AppName)
+                echo $(variables.deployment-env)
             - task: DownloadPipelineArtifact@2
               inputs:
                 buildType: 'current'
