@@ -67,7 +67,8 @@ stages:
     condition: and(succeeded(), eq(variables.isMain, true))
     variables:
       # - ${{ if eq(variables.isMain, true) }}:
-      - group: CSharp-Prod
+      - group: CSharp-Dev
+      - group: deployment-envs
         # - group: deployment-envs
         # - name: deployment-env
         #   value: $[variables.production]
