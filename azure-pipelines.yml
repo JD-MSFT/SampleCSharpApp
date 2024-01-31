@@ -76,7 +76,7 @@ stages:
         - group: deployment-envs
         - name: deployment-env
           value: $[variables.development]
-    environment: $(production)
+    environment: ${{deployment-env}}
 
     pool:
       vmImage: $(vmImageName)
