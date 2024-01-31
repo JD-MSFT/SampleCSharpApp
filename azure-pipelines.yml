@@ -86,7 +86,7 @@ stages:
             - task: AzureRmWebAppDeployment@4
               inputs:
                 ConnectionType: 'AzureRM'
-                azureSubscription: '$(variables.serviceConnection)'
+                azureSubscription: ${{ variables.serviceConnection }}
                 appType: 'webAppLinux'
                 WebAppName: $(AppName)
                 packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
@@ -114,7 +114,7 @@ stages:
             - task: AzureRmWebAppDeployment@4
               inputs:
                 ConnectionType: 'AzureRM'
-                azureSubscription: '$(variables.serviceConnection)'
+                azureSubscription: ${{ variables.serviceConnection }}
                 appType: 'webAppLinux'
                 WebAppName: $(AppName)
                 packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
