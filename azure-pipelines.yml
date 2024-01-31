@@ -69,7 +69,7 @@ stages:
       - ${{ if eq(variables.isMain, true) }}:
         - group: Csharp-Prod
         - group: deployment-envs
-        - name: deployment-envs
+        - name: deployment-env
           value: $[variables.production]
       - ${{ if eq(variables.isDev, true) }}:
         - group: Csharp-Prod
