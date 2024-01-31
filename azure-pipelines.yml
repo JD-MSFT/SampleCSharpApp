@@ -78,18 +78,16 @@ stages:
             steps:
             - script:
                 echo $(AppName)
-                echo $(azServiceConnection)
+                echo $(serviceConnection)
             - task: DownloadPipelineArtifact@2
               inputs:
                 buildType: 'current'
                 artifactName: 'drop'
                 targetPath: '$(Pipeline.Workspace)'
             - task: AzureRmWebAppDeployment@4
-              env:
-                azServiceConnection: $(serviceConnection)
               inputs:
                 ConnectionType: 'AzureRM'
-                azureSubscription: $(azServiceConnection)
+                azureSubscription: $(serviceConnection)
                 appType: 'webAppLinux'
                 WebAppName: $(AppName)
                 packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
@@ -114,12 +112,10 @@ stages:
                 buildType: 'current'
                 artifactName: 'drop'
                 targetPath: '$(Pipeline.Workspace)'
-            - task: AzureRmWebAppDeployment@4
-              env:
-                azServiceConnection: $(serviceConnection)
+            - task: AzureRmWebAppDeployment@4\\
               inputs:
                 ConnectionType: 'AzureRM'
-                azureSubscription: $(azServiceConnection)
+                azureSubscription: $(serviceConnection)
                 appType: 'webAppLinux'
                 WebAppName: $(AppName)
                 packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
