@@ -66,7 +66,7 @@ stages:
   - deployment: mainDeploy
     condition: and(succeeded(), eq(variables.isMain, true))
     variables:
-        - group: CSharp-Prod
+      - group: CSharp-Prod
     environment: myproduction
 
     pool:
@@ -94,8 +94,8 @@ stages:
   - deployment: devDeploy
     condition: and(succeeded(), eq(variables.isDev, true))
     variables:
-        - group: CSharp-Dev
-    environment: myproduction
+      - group: CSharp-Dev
+    environment: mydevelopment
 
     pool:
       vmImage: $(vmImageName)
