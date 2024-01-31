@@ -78,6 +78,7 @@ stages:
             steps:
             - script:
                 echo $(AppName)
+                echo ${{ variables.serviceConnection }}
             - task: DownloadPipelineArtifact@2
               inputs:
                 buildType: 'current'
