@@ -8,9 +8,6 @@ trigger:
 - development
 - feature/*
 
-env:
-  azServiceConnection: $(serviceConnection)
-
 variables:
   vmImageName: 'ubuntu-latest'
 
@@ -88,6 +85,8 @@ stages:
                 artifactName: 'drop'
                 targetPath: '$(Pipeline.Workspace)'
             - task: AzureRmWebAppDeployment@4
+              env:
+                azServiceConnection: $(serviceConnection)
               inputs:
                 ConnectionType: 'AzureRM'
                 azureSubscription: $(azServiceConnection)
@@ -116,6 +115,8 @@ stages:
                 artifactName: 'drop'
                 targetPath: '$(Pipeline.Workspace)'
             - task: AzureRmWebAppDeployment@4
+              env:
+                azServiceConnection: $(serviceConnection)
               inputs:
                 ConnectionType: 'AzureRM'
                 azureSubscription: $(azServiceConnection)
