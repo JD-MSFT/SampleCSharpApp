@@ -86,7 +86,7 @@ stages:
           deploy:
             steps:
             - script:
-                echo "Deploying to $(deployment-env)"
+                echo $(deployment-env)
             - task: DownloadPipelineArtifact@2
               inputs:
                 buildType: 'current'
