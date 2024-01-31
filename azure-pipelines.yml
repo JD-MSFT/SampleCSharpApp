@@ -1,7 +1,4 @@
 # ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
 - main
@@ -76,6 +73,10 @@ stages:
         runOnce:
           deploy:
             steps:
+            - script: |
+              $a = 5
+              $b = 10
+              echo "The sum of $a and $b is $a + $b"
             - script:
                 echo $(AppName)
                 echo $(serviceConnection)
