@@ -5,6 +5,15 @@
 
 trigger:
 - main
+- development
+- feature/*
+
+variables:
+  vmImageName: 'ubuntu-latest'
+
+  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+
+  isDev: $[eq(variables['Build.SourceBranch'], 'refs/heads/development')]
 
 stages:
 - stage: Build
@@ -13,7 +22,7 @@ stages:
   - job: Build
 
     pool:
-      vmImage: ubuntu-latest
+      vmImage: $(vmImageName)
 
     variables:
       buildConfiguration: 'Release'
@@ -25,20 +34,25 @@ stages:
         command: build
         projects: '**/*.csproj'
         arguments: '--configuration $(buildConfiguration)' 
+
     - task: DotNetCoreCLI@2
       displayName: Test    
       inputs:
         command: test
         projects: '$(System.DefaultWorkingDirectory)/UnitTests/SampleTestProject/SampleTestProject.csproj'
         arguments: '--configuration $(buildConfiguration)'
+
     - task: DotNetCoreCLI@2
+      condition: and(succeeded(), in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/development'))
       displayName: Prepare Publish    
       inputs:
         command: publish
         publishWebProjects: True
         arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: True
+
     - task: PublishPipelineArtifact@1
+      condition: and(succeeded(), in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/development'))
       displayName: Publish    
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)' 
@@ -46,13 +60,26 @@ stages:
 
 
 - stage: Deploy
+  condition: and(succeeded(), in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/development'))
 
   jobs:
   - deployment: deploy
-    environment: 'mydevelopment'
+    condition: and(succeeded(), eq(variables.isMain, true))
+    variables:
+      ${{ if eq(variables.isMain, true) }}:
+        - group: Csharp-Prod
+        - group: deployment-envs
+        - name: deployment-envs
+          value: $[variables.production]
+      ${{ if eq(variables.isDev, true) }}:
+        - group: Csharp-Prod
+        - group: deployment-envs
+        - name: deployment-env
+          value: $[variables.development]
+    environment: deployment-env
 
     pool:
-      vmImage: ubuntu-latest
+      vmImage: $(vmImageName)
 
     strategy:
         runOnce:
