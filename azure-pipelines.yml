@@ -63,17 +63,11 @@ stages:
   condition: and(succeeded(), in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/development'))
 
   jobs:
-  - deployment: deploy
+  - deployment: main deploy
     condition: and(succeeded(), eq(variables.isMain, true))
     variables:
-      - ${{ if eq(variables.isMain, true) }}:
-        - group: CSharp-Dev
-        - group: deployment-envs
-        environment: $(production)
-      - ${{ if eq(variables.isDev, true) }}:
-        - group: CSharp-Dev
-        - group: deployment-envs
-        environment: $(development)
+        - group: CSharp-Prod
+    environment: myproduction
 
     pool:
       vmImage: $(vmImageName)
@@ -83,8 +77,7 @@ stages:
           deploy:
             steps:
             - script:
-                echo $(variables.AppName)
-                echo $(variables.deployment-env)
+                echo $(AppName)
             - task: DownloadPipelineArtifact@2
               inputs:
                 buildType: 'current'
@@ -95,5 +88,33 @@ stages:
                 ConnectionType: 'AzureRM'
                 azureSubscription: 'devops-accelerator-connection'
                 appType: 'webAppLinux'
-                WebAppName: 'devopsacceleratorsamplecsharp'
+                WebAppName: $(AppName)
                 packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
+
+  - deployment: dev deploy
+      condition: and(succeeded(), eq(variables.isDev, true))
+      variables:
+          - group: CSharp-Dev
+      environment: myproduction
+
+      pool:
+        vmImage: $(vmImageName)
+
+      strategy:
+          runOnce:
+            deploy:
+              steps:
+              - script:
+                  echo $(variables.AppName)
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  buildType: 'current'
+                  artifactName: 'drop'
+                  targetPath: '$(Pipeline.Workspace)'
+              - task: AzureRmWebAppDeployment@4
+                inputs:
+                  ConnectionType: 'AzureRM'
+                  azureSubscription: 'devops-accelerator-connection'
+                  appType: 'webAppLinux'
+                  WebAppName: 'devopsacceleratorsamplecsharp'
+                  packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
