@@ -63,7 +63,7 @@ stages:
   condition: and(succeeded(), in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/development'))
 
   jobs:
-  - deployment: main-deploy
+  - deployment: mainDeploy
     condition: and(succeeded(), eq(variables.isMain, true))
     variables:
         - group: CSharp-Prod
@@ -91,7 +91,7 @@ stages:
                 WebAppName: $(AppName)
                 packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
 
-  - deployment: dev-deploy
+  - deployment: devDeploy
     condition: and(succeeded(), eq(variables.isDev, true))
     variables:
         - group: CSharp-Dev
