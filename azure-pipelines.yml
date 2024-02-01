@@ -22,7 +22,8 @@ stages:
       vmImage: $(vmImageName)
 
     variables:
-      buildConfiguration: 'Release'
+      - name: buildConfiguration
+          value: 'Release'
       - name: one
           value: initialValue 
       
