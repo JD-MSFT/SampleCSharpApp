@@ -23,9 +23,9 @@ stages:
 
     variables:
       - name: buildConfiguration
-          value: 'Release'
+        value: 'Release'
       - name: one
-          value: initialValue 
+        value: initialValue 
       
 
     steps:
