@@ -7,6 +7,7 @@ trigger:
 
 variables:
   vmImageName: 'ubuntu-latest'
+  
   props: 'myProps'
 
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
@@ -61,39 +62,39 @@ stages:
   condition: and(succeeded(), in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/development'))
 
   jobs:
-  - deployment: mainDeploy
-    condition: and(succeeded(), eq(variables.isMain, true))
-    variables:
-      - group: CSharp-Prod
-    environment: myproduction
+  - ${{ if eq(variables.isMain, true) }}:
+    - deployment: mainDeploy
+      variables:
+        - group: CSharp-Prod
+      environment: myproduction
 
-    pool:
-      vmImage: $(vmImageName)
+      pool:
+        vmImage: $(vmImageName)
 
-    strategy:
-        runOnce:
-          deploy:
-            steps:
-            - script: |
-                echo $(AppName)
-                echo $(serviceConnection)
-                echo $(props)
-                echo "##vso[task.setvariable variable=props]myOtherProps"
-            - task: DownloadPipelineArtifact@2
-              inputs:
-                buildType: 'current'
-                artifactName: 'drop'
-                targetPath: '$(Pipeline.Workspace)'
-            - task: AzureRmWebAppDeployment@4
-              inputs:
-                ConnectionType: 'AzureRM'
-                azureSubscription: $(serviceConnection)
-                appType: 'webAppLinux'
-                WebAppName: $(AppName)
-                packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
-            - script: |
-                echo ${{ variables.props }}
-                echo $(props)
+      strategy:
+          runOnce:
+            deploy:
+              steps:
+              - script: |
+                  echo $(AppName)
+                  echo $(serviceConnection)
+                  echo $(props)
+                  echo "##vso[task.setvariable variable=props]myOtherProps"
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  buildType: 'current'
+                  artifactName: 'drop'
+                  targetPath: '$(Pipeline.Workspace)'
+              - task: AzureRmWebAppDeployment@4
+                inputs:
+                  ConnectionType: 'AzureRM'
+                  azureSubscription: $(serviceConnection)
+                  appType: 'webAppLinux'
+                  WebAppName: $(AppName)
+                  packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
+              - script: |
+                  echo ${{ variables.props }}
+                  echo $(props)
 
   - ${{ if eq(variables.isDev, true) }}:
     - deployment: devDeploy
