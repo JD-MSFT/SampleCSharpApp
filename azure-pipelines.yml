@@ -92,6 +92,7 @@ stages:
                 WebAppName: $(AppName)
                 packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
             - script: |
+                echo ${{ variables.props }}
                 echo $(props)
 
   - deployment: devDeploy
