@@ -95,30 +95,31 @@ stages:
                 echo ${{ variables.props }}
                 echo $(props)
 
-  - deployment: devDeploy
-    condition: and(succeeded(), eq(variables.isDev, true))
-    variables:
-      - group: CSharp-Dev
-    environment: mydevelopment
+  - ${{ if eq(variables.isDev, true) }}:
+    - deployment: devDeploy
+      condition: and(succeeded(), eq(variables.isDev, true))
+      variables:
+        - group: CSharp-Dev
+      environment: mydevelopment
 
-    pool:
-      vmImage: $(vmImageName)
+      pool:
+        vmImage: $(vmImageName)
 
-    strategy:
-        runOnce:
-          deploy:
-            steps:
-            - script:
-                echo $(AppName)
-            - task: DownloadPipelineArtifact@2
-              inputs:
-                buildType: 'current'
-                artifactName: 'drop'
-                targetPath: '$(Pipeline.Workspace)'
-            - task: AzureRmWebAppDeployment@4
-              inputs:
-                ConnectionType: 'AzureRM'
-                azureSubscription: $(serviceConnection)
-                appType: 'webAppLinux'
-                WebAppName: $(AppName)
-                packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
+      strategy:
+          runOnce:
+            deploy:
+              steps:
+              - script:
+                  echo $(AppName)
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  buildType: 'current'
+                  artifactName: 'drop'
+                  targetPath: '$(Pipeline.Workspace)'
+              - task: AzureRmWebAppDeployment@4
+                inputs:
+                  ConnectionType: 'AzureRM'
+                  azureSubscription: $(serviceConnection)
+                  appType: 'webAppLinux'
+                  WebAppName: $(AppName)
+                  packageForLinux: '$(Pipeline.Workspace)/drop/src.zip'
